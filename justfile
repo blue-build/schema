@@ -1,3 +1,2 @@
 compile:
-    rm -rf ./tsp-output
-    npx tsp compile .
+    npm run build

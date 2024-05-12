@@ -6,5 +6,8 @@
     "@typespec/compiler": "latest",
     "@typespec/json-schema": "^0.56.0"
   },
-  "private": true
+  "private": true,
+  "scripts": {
+    "build": "rm -rf ./tsp-output && npx tsp compile ."
+  }
 }
