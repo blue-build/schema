@@ -8,6 +8,7 @@
   },
   "private": true,
   "scripts": {
-    "build": "rm -rf ./tsp-output && npx tsp compile ."
+    "build": "rm -rf ./tsp-output && npx tsp compile .",
+    "build-web": "npm run build && cp -r ./tsp-output/@typespec/json-schema ./dist && cp ./_headers ./dist"
   }
 }
