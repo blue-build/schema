@@ -1,0 +1,10 @@
+{
+  "name": "schema.blue-build.org",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "@typespec/compiler": "latest",
+    "@typespec/json-schema": "^0.56.0"
+  },
+  "private": true
+}
