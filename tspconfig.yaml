@@ -3,7 +3,7 @@ emit:                                         # Emitter name
   - "@typespec/json-schema"
 options:                                      # Emitter options
   "@typespec/json-schema":
-    file-type: yaml
+    file-type: json
     int64-strategy: string
 # environment-variables:                        # Environment variables which can be used to interpolate emitter options
 #   <variable-name>:
