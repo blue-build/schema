@@ -10,7 +10,7 @@ fs.existsSync(buildDir) && fs.rmSync(buildDir, { recursive: true });
 fs.mkdirSync(buildDir)
 fs.mkdirSync(`${buildDir}/modules`);
 
-fs.copyFileSync('./_headers', `${buildDir}/_headers`);
+fs.copyFileSync('./src-web/_headers', `${buildDir}/_headers`);
 
 const ids = []
 
@@ -26,7 +26,7 @@ fs.readdirSync(sourceDir).forEach((file) => {
 console.log("Files built: " + ids.join(', '))
 console.log("Generating index.html...")
 
-const template = fs.readFileSync('./template-index.html').toString()
+const template = fs.readFileSync('./src-web/template-index.html').toString()
 const indexHtml = template.replace(
     '%DYNAMIC_SCHEMA_LIST%',
     ids.map(

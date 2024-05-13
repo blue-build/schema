@@ -8,7 +8,7 @@
   },
   "private": true,
   "scripts": {
-    "build": "rm -rf ./tsp-output && npx tsp compile .",
+    "build": "rm -rf ./tsp-output && npx tsp compile ./src-tsp",
     "build-web": "npm run build && node ./buildWeb.js"
   }
 }
