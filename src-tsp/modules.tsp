@@ -1,21 +1,12 @@
-import "@typespec/json-schema";
-using TypeSpec.JsonSchema;
+import "./modules/akmods.tsp";
+import "./modules/bling.tsp";
+import "./modules/fonts.tsp";
+import "./modules/rpm-ostree.tsp";
 
-alias module = rpmOstreeModule | fontsModule;
+alias Module =
+    akmodsModule |
+    blingModule |
+    fontsModule |
+    rpmOstreeModule
+;
 
-@jsonSchema("/modules/rpm-ostree.json")
-model rpmOstreeModule {
-    type: "rpm-ostree",
-    repos: Array<string>,
-    install: Array<string>,
-    remove: Array<string>,
-}
-
-@jsonSchema("/modules/fonts.json")
-model fontsModule {
-    type: "fonts",
-    fonts: {
-        "nerd-fonts": Array<string>,
-        "google-fonts": Array<string>
-    }
-}
