@@ -1,2 +1,2 @@
 compile:
-    npm run build
+    npm run build-web

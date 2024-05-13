@@ -3,7 +3,7 @@ using TypeSpec.JsonSchema;
 
 alias module = rpmOstreeModule | fontsModule;
 
-@jsonSchema()
+@jsonSchema("/modules/rpm-ostree.json")
 model rpmOstreeModule {
     type: "rpm-ostree",
     repos: Array<string>,
@@ -11,7 +11,7 @@ model rpmOstreeModule {
     remove: Array<string>,
 }
 
-@jsonSchema()
+@jsonSchema("/modules/fonts.json")
 model fontsModule {
     type: "fonts",
     fonts: {
