@@ -3,8 +3,8 @@ import "./modules.tsp";
 
 using TypeSpec.JsonSchema;
 
-@jsonSchema("recipe.json")
-model recipe {
+@jsonSchema("recipe-v1.json")
+model Recipe {
     name: string,
     description: string,
     "base-image": string,
