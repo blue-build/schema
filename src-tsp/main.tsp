@@ -1,5 +1,5 @@
 import "@typespec/json-schema";
-import "./modules.tsp";
+import "./modules/index.tsp";
 
 using TypeSpec.JsonSchema;
 

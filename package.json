@@ -4,11 +4,13 @@
   "type": "module",
   "dependencies": {
     "@typespec/compiler": "latest",
-    "@typespec/json-schema": "^0.56.0"
+    "@typespec/json-schema": "^0.56.0",
+    "change-case": "^5.4.4",
+    "yaml": "^2.4.2"
   },
   "private": true,
   "scripts": {
-    "build": "rm -rf ./tsp-output && npx tsp compile ./src-tsp",
+    "build": "node ./fetchModuleSchemas.js && rm -rf ./tsp-output && npx tsp compile ./src-tsp",
     "build-web": "npm run build && node ./buildWeb.js"
   }
 }
