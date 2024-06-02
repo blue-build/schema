@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "type": "module",
   "dependencies": {
-    "@typespec/compiler": "latest",
-    "@typespec/json-schema": "^0.56.0",
+    "@typespec/compiler": "0.57.0-dev.15",
+    "@typespec/json-schema": "0.57.0-dev.5",
     "change-case": "^5.4.4",
     "yaml": "^2.4.2"
   },
