@@ -52,7 +52,10 @@ model Recipe {
 
         /** Allows a user to pass in an array of strings that are passed directly into the [`SHELL` instruction](https://docs.docker.com/reference/dockerfile/#shell). */
         shell?: string,
-
+        
+        /**
+         * The list of modules to execute. The exact same syntax used by the main recipe `modules:` property.
+         */
         modules: Array<Module>,
     }>,
 
