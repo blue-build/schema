@@ -18,7 +18,24 @@ for (const module of modules) {
     const moduleYml = parse(await res.text())
     if (moduleYml.typespec) {
         const res = await fetch(moduleYml.typespec)
-        fs.writeFileSync(`${modulesDir}/${moduleYml.name}.tsp`, await res.text())
+        let text = await res.text()
+
+        text = text // add `...ModuleDefaults;` after the model type
+            .split("\n")
+            .flatMap(line => {
+                if (line.trimStart().startsWith(`type: "${moduleYml.name}"`)) {
+                    return [
+                        line,
+                        '',
+                        '    ...ModuleDefaults; // added by fetchModuleSchemas.js',
+                    ]
+                } else {
+                    return line;
+                }
+            })
+            .join('\n')
+
+        fs.writeFileSync(`${modulesDir}/${moduleYml.name}.tsp`, text)
 
         moduleImports.push(`${moduleYml.name}.tsp`)
         moduleModels.push(`${pascalCase(moduleYml.name)}`)
@@ -27,5 +44,5 @@ for (const module of modules) {
 
 fs.writeFileSync(`${modulesDir}/index.tsp`, 
 moduleImports.map(m => `import "./${m}";`).join("\n") + `
-alias Module = ${moduleModels.map(m => `${m}Module`).join(" | ")};`
+alias RepoModule = ${moduleModels.map(m => `${m}Module`).join(" | ")};`
 )
