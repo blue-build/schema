@@ -4,7 +4,7 @@ import fs from "node:fs"
 
 const modulesDir = "./src-tsp/modules"
 
-const res = await fetch("https://raw.githubusercontent.com/blue-build/modules/113-feat-create-json-schemas-for-module-configuration/modules.json")
+const res = await fetch("https://raw.githubusercontent.com/blue-build/modules/main/modules.json")
 const modules = await res.json()
 
 let moduleImports = []
