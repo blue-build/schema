@@ -4,7 +4,7 @@ import fs from "node:fs"
 
 const modulesDir = "./src-tsp/modules"
 
-const res = await fetch("https://raw.githubusercontent.com/blue-build/modules/main/modules.json")
+const res = await fetch("https://blue-build.org/modules.json")
 const modules = await res.json()
 
 let moduleImports = []
@@ -14,7 +14,7 @@ fs.existsSync(modulesDir) && fs.rmSync(modulesDir, { recursive: true });
 fs.mkdirSync(modulesDir)
 
 for (const module of modules) {
-    const res = await fetch(module)
+    const res = await fetch(module.yml)
     const moduleYml = parse(await res.text())
     if (moduleYml.typespec) {
         const res = await fetch(moduleYml.typespec)
