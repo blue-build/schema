@@ -14,32 +14,29 @@ fs.existsSync(modulesDir) && fs.rmSync(modulesDir, { recursive: true });
 fs.mkdirSync(modulesDir)
 
 for (const module of modules) {
-    const res = await fetch(module.yml)
-    const moduleYml = parse(await res.text())
-    if (moduleYml.typespec) {
-        const res = await fetch(moduleYml.typespec)
-        let text = await res.text()
+    if (module.tsp === "") continue
+    const res = await fetch(module.tsp)
+    let text = await res.text()
 
-        text = text // add `...ModuleDefaults;` after the model type
-            .split("\n")
-            .flatMap(line => {
-                if (line.trimStart().startsWith(`type: "${moduleYml.name}"`)) {
-                    return [
-                        line,
-                        '',
-                        '    ...ModuleDefaults; // added by fetchModuleSchemas.js',
-                    ]
-                } else {
-                    return line;
-                }
-            })
-            .join('\n')
+    text = text // add `...ModuleDefaults;` after the model type
+        .split("\n")
+        .flatMap(line => {
+            if (line.trimStart().startsWith(`type: "${module.name}"`)) {
+                return [
+                    line,
+                    '',
+                    '    ...ModuleDefaults; // added by fetchModuleSchemas.js',
+                ]
+            } else {
+                return line;
+            }
+        })
+        .join('\n')
 
-        fs.writeFileSync(`${modulesDir}/${moduleYml.name}.tsp`, text)
+    fs.writeFileSync(`${modulesDir}/${module.name}.tsp`, text)
 
-        moduleImports.push(`${moduleYml.name}.tsp`)
-        moduleModels.push(`${pascalCase(moduleYml.name)}`)
-    }
+    moduleImports.push(`${module.name}.tsp`)
+    moduleModels.push(`${pascalCase(module.name)}`)
 }
 
 fs.writeFileSync(`${modulesDir}/index.tsp`, 
