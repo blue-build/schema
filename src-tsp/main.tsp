@@ -34,7 +34,7 @@ model Recipe {
      * Used to select a version explicitly (`40`) or to always use the latest stable version (`latest`).
      * A list of all available tags can be viewed by pasting your `base-image` url into your browser.
      */
-    "image-version": string;
+    "image-version": string | integer;
 
     /** 
      * A list of [stages](https://blue-build.org/reference/stages/) that are executed before the build of the final image.
