@@ -63,7 +63,7 @@ model StageList {
 
 @jsonSchema("stage-v1.json")
 model StageFull {
-    ...Record<Stage>;
+    ...Stage;
 }
 
 alias Stage = StageDefault | FromFile;
@@ -94,7 +94,7 @@ model ModuleList {
 
 @jsonSchema("module-v1.json")
 model ModuleFull {
-    ...Record<Module>;
+    ...Module;
 }
 
 alias Module = RepoModule | CustomModule | FromFile; 
