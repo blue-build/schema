@@ -56,6 +56,16 @@ model Recipe {
     modules: Array<Module>;
 }
 
+@jsonSchema("stage-list-v1.json")
+model StageList {
+    stages: Array<Stage>;
+}
+
+@jsonSchema("stage-v1.json")
+model StageFull {
+    ...Record<Stage>;
+}
+
 alias Stage = StageDefault | FromFile;
 
 model StageDefault {
@@ -76,6 +86,16 @@ model StageDefault {
      */
     modules: Array<Module>;
 };
+
+@jsonSchema("module-list-v1.json")
+model ModuleList {
+    modules: Array<Module>;
+}
+
+@jsonSchema("module-v1.json")
+model ModuleFull {
+    ...Record<Module>;
+}
 
 alias Module = RepoModule | CustomModule | FromFile; 
 
