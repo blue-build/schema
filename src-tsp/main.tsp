@@ -36,28 +36,17 @@ model Recipe {
      */
     "image-version": string | integer;
 
+    /**
+     * The tag to pull for the bluebuild cli. This is mostly used for
+     * trying out specific versions of the cli without compiling it locally.
+     **/
+    "blue-build-tag"?: string;
+
     /** 
      * A list of [stages](https://blue-build.org/reference/stages/) that are executed before the build of the final image.
      * This is useful for compiling programs from source without polluting the final bootable image.
      */
-    stages?: Array<{
-        /**
-         * The name of the stage. This is used when referencing
-         * the stage when using the from: property in the [`copy` module](https://blue-build.org/reference/modules/copy/).
-         */
-        name: string;
-
-        /** The full image ref (image name + tag). This will be set in the FROM statement of the stage. */
-        from: string;
-
-        /** Allows a user to pass in an array of strings that are passed directly into the [`SHELL` instruction](https://docs.docker.com/reference/dockerfile/#shell). */
-        shell?: string;
-        
-        /**
-         * The list of modules to execute. The exact same syntax used by the main recipe `modules:` property.
-         */
-        modules: Array<Module>;
-    }>;
+    stages?: Array<Stage>;
 
     /**
      * A list of [modules](https://blue-build.org/reference/module/) that is executed in order. Multiple of the same module can be included.
@@ -67,7 +56,33 @@ model Recipe {
     modules: Array<Module>;
 }
 
-alias Module = RepoModule | CustomModule; 
+alias Stage = StageDefault | FromFile;
+
+model StageDefault {
+    /**
+     * The name of the stage. This is used when referencing
+     * the stage when using the from: property in the [`copy` module](https://blue-build.org/reference/modules/copy/).
+     */
+    name: string;
+
+    /** The full image ref (image name + tag). This will be set in the FROM statement of the stage. */
+    from: string;
+
+    /** Allows a user to pass in an array of strings that are passed directly into the [`SHELL` instruction](https://docs.docker.com/reference/dockerfile/#shell). */
+    shell?: string;
+    
+    /**
+     * The list of modules to execute. The exact same syntax used by the main recipe `modules:` property.
+     */
+    modules: Array<Module>;
+};
+
+alias Module = RepoModule | CustomModule | FromFile; 
+
+model FromFile {
+     /** The path to another file containing module definitions **/
+     "from-file": string;
+}
 
 model ModuleDefaults {
     /** Whether to disabling caching for this layer. 
