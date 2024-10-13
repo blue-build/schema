@@ -21,15 +21,16 @@ for (const module of modules) {
     text = text // add `...ModuleDefaults;` after the model type
         .split("\n")
         .flatMap(line => {
-            if (line.trimStart().startsWith(`type: "${module.name}"`)) {
-                return [
-                    line,
-                    '',
-                    '    ...ModuleDefaults; // added by fetchModuleSchemas.js',
-                ]
-            } else {
-                return line;
-            }
+            return line.replace(/model ([A-Za-z]+) {/, "model $1 extends Module {");
+            // if (line.trimStart().startsWith(`type: "${module.name}"`)) {
+            //     return [
+            //         line,
+            //         '',
+            //         '    ...ModuleDefaults; // added by fetchModuleSchemas.js',
+            //     ]
+            // } else {
+            //     return line;
+            // }
         })
         .join('\n')
 
