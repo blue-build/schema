@@ -53,7 +53,7 @@ model Recipe {
    *
    * Each item in this list should have at least a `type:` or be specified to be included from an external file in the `recipes/` directory with `from-file:`.
    */
-  modules: Array<ModuleType | ImportedModule>;
+  modules: Array<Module | ImportedModule>;
 }
 
 @jsonSchema("stage-list-v1.json")
@@ -78,33 +78,17 @@ model Stage {
   /**
    * The list of modules to execute. The exact same syntax used by the main recipe `modules:` property.
    */
-  modules: Array<ModuleType | ImportedModule>;
+  modules: Array<Module | ImportedModule>;
 }
 
 @jsonSchema("module-list-v1.json")
 model ModuleList {
-  modules: Array<ModuleType | ImportedModule>;
+  modules: Array<Module | ImportedModule>;
 }
 
 @jsonSchema("module-v1.json")
 union ModuleType {
-  akmods: AkmodsModule,
-  bling: BlingModule,
-  brew: BrewModule,
-  chezmoi: ChezmoiModule,
-  containerfile: ContainerfileModule,
-  copy: CopyModule,
-  default_flatpaks: DefaultFlatpaksModule,
-  files: FilesModule,
-  fonts: FontsModule,
-  gnome_extentions: GnomeExtensionsModule,
-  gschema_overrides: GschemaOverridesModule,
-  justfiles: JustfilesModule,
-  rpm_ostree: RpmOstreeModule,
-  script: ScriptModule,
-  signing: SigningModule,
-  systemd: SystemdModule,
-  yafti: YaftiModule,
+  normal: Module,
   custom: CustomModule,
 }
 
