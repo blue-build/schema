@@ -1,4 +1,4 @@
-tsp-output/
-node_modules/
-dist/
-src-tsp/modules/
+tsp-output/*
+node_modules/*
+dist/*
+src-tsp/modules/*
