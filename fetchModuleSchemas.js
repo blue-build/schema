@@ -21,7 +21,7 @@ for (const module of modules) {
     text = text // add `...ModuleDefaults;` after the model type
         .split("\n")
         .flatMap(line => {
-            return line.replace(/model ([A-Za-z]+) {/, "model $1 extends Module {");
+            return line.replace(/model ([A-Za-z]+) {/, "model $1 extends ModuleDefaults {");
             // if (line.trimStart().startsWith(`type: "${module.name}"`)) {
             //     return [
             //         line,
