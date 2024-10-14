@@ -87,13 +87,8 @@ model ModuleList {
 }
 
 @jsonSchema("module-v1.json")
+@oneOf
 union ModuleType {
-  normal: NormalModules,
-  custom: CustomModule,
-}
-
-@discriminator("type")
-union NormalModules {
   akmods: AkmodsModule,
   bling: BlingModule,
   brew: BrewModule,
@@ -111,6 +106,7 @@ union NormalModules {
   signing: SigningModule,
   systemd: SystemdModule,
   yafti: YaftiModule,
+  custom: CustomModule,
 }
 
 @discriminator("type")
