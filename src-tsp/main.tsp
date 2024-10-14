@@ -53,7 +53,7 @@ model Recipe {
    *
    * Each item in this list should have at least a `type:` or be specified to be included from an external file in the `recipes/` directory with `from-file:`.
    */
-  modules: Array<Module | ImportedModule>;
+  modules: Array<ModuleType | ImportedModule>;
 }
 
 @jsonSchema("stage-list-v1.json")
@@ -82,7 +82,7 @@ model Stage {
   /**
    * The list of modules to execute. The exact same syntax used by the main recipe `modules:` property.
    */
-  modules: Array<Module | ImportedModule>;
+  modules: Array<ModuleType | ImportedModule>;
 }
 
 @jsonSchema("module-list-v1.json")
@@ -92,11 +92,17 @@ model ModuleList {
    *
    * Each item in this list should have at least a `type:` or be specified to be included from an external file in the `recipes/` directory with `from-file:`.
    */
-  modules: Array<Module | ImportedModule>;
+  modules: Array<ModuleType | ImportedModule>;
 }
 
 @jsonSchema("module-v1.json")
-union Module {
+union ModuleType {
+  normal: NormalModules,
+  custom: CustomModule,
+}
+
+@discriminator("type")
+union NormalModules {
   akmods: AkmodsModule,
   bling: BlingModule,
   brew: BrewModule,
@@ -114,11 +120,13 @@ union Module {
   signing: SigningModule,
   systemd: SystemdModule,
   yafti: YaftiModule,
-  custom: CustomModule,
 }
 
 @discriminator("type")
-model ModuleDefaults {
+model Module {
+  /** This is not a built-in module. */
+  type: string;
+
   /** Whether to disabling caching for this layer.
    * https://blue-build.org/reference/module/#no-cache-optional
    */
