@@ -87,6 +87,7 @@ model ModuleList {
 }
 
 @jsonSchema("module-v1.json")
+@oneOf
 union ModuleType {
   akmods: AkmodsModule,
   bling: BlingModule,
