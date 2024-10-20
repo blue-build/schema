@@ -130,3 +130,9 @@ model ImportedModule {
    */
   `from-file`: string;
 }
+
+@jsonSchema("module-stage-list-v1.json")
+model ModuleStageList {
+  ...ModuleList;
+  ...StageList;
+}
