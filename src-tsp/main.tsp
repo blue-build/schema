@@ -114,7 +114,8 @@ model CustomModule {
   /** This is not a built-in module. */
   type: string;
 
-  /** The URL of the module repository (an OCI image) to pull the module from.
+  /** The image ref of the module repository (an OCI image) to pull the module from.
+   * If this is a local module, set the value to 'local'.
    * https://blue-build.org/reference/module/#source-optional
    */
   source: string;
