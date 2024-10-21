@@ -96,7 +96,6 @@ model ModuleList {
 }
 
 @jsonSchema("module-v1.json")
-@oneOf
 union Module {
   RepoModule,
   CustomModule,
