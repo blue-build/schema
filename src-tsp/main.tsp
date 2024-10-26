@@ -113,7 +113,6 @@ union ModuleEntry {
 
 @jsonSchema("module-v1.json")
 @oneOf
-@extension("additionalProperties", false)
 union Module {
   RepoModule,
   CustomModule,
