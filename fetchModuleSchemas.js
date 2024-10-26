@@ -21,12 +21,18 @@ for (const module of modules) {
     text = text // add `...ModuleDefaults;` after the model type
         .split("\n")
         .flatMap(line => {
+            if (line.trimStart().startsWith("model")) {
+                return [
+                    `@extension("additionalProperties", false)`,
+                    line
+                ];
+            }
             if (line.trimStart().startsWith(`type: "${module.name}"`)) {
                 return [
                     line,
                     '',
                     '    ...ModuleDefaults; // added by fetchModuleSchemas.js',
-                ]
+                ];
             } else {
                 return line;
             }

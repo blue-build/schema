@@ -4,6 +4,7 @@ import "./modules/index.tsp";
 using TypeSpec.JsonSchema;
 
 @jsonSchema("recipe-v1.json")
+@extension("additionalProperties", false)
 model Recipe {
   /**
    * The image name. Used when publishing to GHCR as `ghcr.io/user/name`.
@@ -57,6 +58,7 @@ model Recipe {
 }
 
 @jsonSchema("stage-list-v1.json")
+@extension("additionalProperties", false)
 model StageList {
   /**
    * A list of [stages](https://blue-build.org/reference/stages/) that are executed before the build of the final image.
@@ -72,6 +74,7 @@ union StageEntry {
 }
 
 @jsonSchema("stage-v1.json")
+@extension("additionalProperties", false)
 model Stage {
   /**
    * The name of the stage. This is used when referencing
@@ -92,6 +95,7 @@ model Stage {
 }
 
 @jsonSchema("module-list-v1.json")
+@extension("additionalProperties", false)
 model ModuleList {
   /**
    * A list of [modules](https://blue-build.org/reference/module/) that is executed in order. Multiple of the same module can be included.
@@ -109,6 +113,7 @@ union ModuleEntry {
 
 @jsonSchema("module-v1.json")
 @oneOf
+@extension("additionalProperties", false)
 union Module {
   RepoModule,
   CustomModule,
@@ -135,6 +140,7 @@ model CustomModule {
   ...Record<unknown>;
 }
 
+@extension("additionalProperties", false)
 model ImportedModule {
   /** The path to another file containing module configuration to import here.
    * https://blue-build.org/how-to/multiple-files/
@@ -143,6 +149,7 @@ model ImportedModule {
 }
 
 @jsonSchema("module-stage-list-v1.json")
+@extension("additionalProperties", false)
 model ModuleStageList {
   ...ModuleList;
   ...StageList;
