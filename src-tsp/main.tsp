@@ -58,7 +58,6 @@ model Recipe {
 }
 
 @jsonSchema("stage-list-v1.json")
-@extension("additionalProperties", false)
 model StageList {
   /**
    * A list of [stages](https://blue-build.org/reference/stages/) that are executed before the build of the final image.
@@ -95,7 +94,6 @@ model Stage {
 }
 
 @jsonSchema("module-list-v1.json")
-@extension("additionalProperties", false)
 model ModuleList {
   /**
    * A list of [modules](https://blue-build.org/reference/module/) that is executed in order. Multiple of the same module can be included.
