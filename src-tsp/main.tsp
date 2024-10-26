@@ -62,7 +62,13 @@ model StageList {
    * A list of [stages](https://blue-build.org/reference/stages/) that are executed before the build of the final image.
    * This is useful for compiling programs from source without polluting the final bootable image.
    */
-  stages: Array<Stage | ImportedModule>;
+  stages: Array<StageEntry>;
+}
+
+@oneOf
+union StageEntry {
+  Stage,
+  ImportedModule,
 }
 
 @jsonSchema("stage-v1.json")
@@ -92,14 +98,19 @@ model ModuleList {
    *
    * Each item in this list should have at least a `type:` or be specified to be included from an external file in the `recipes/` directory with `from-file:`.
    */
-  modules: Array<Module>;
+  modules: Array<ModuleEntry>;
+}
+
+union ModuleEntry {
+  Module,
+  ImportedModule,
 }
 
 @jsonSchema("module-v1.json")
+@oneOf
 union Module {
   RepoModule,
   CustomModule,
-  ImportedModule,
 }
 
 model ModuleDefaults {
