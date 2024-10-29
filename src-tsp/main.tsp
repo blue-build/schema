@@ -66,7 +66,6 @@ model StageList {
   stages: Array<StageEntry>;
 }
 
-@oneOf
 union StageEntry {
   Stage,
   ImportedModule,
@@ -103,14 +102,12 @@ model ModuleList {
   modules: Array<ModuleEntry>;
 }
 
-@oneOf
 union ModuleEntry {
   Module,
   ImportedModule,
 }
 
 @jsonSchema("module-v1.json")
-@oneOf
 union Module {
   RepoModule,
   CustomModule,
