@@ -43,6 +43,12 @@ model Recipe {
    **/
   `blue-build-tag`?: string;
 
+  /** The version of nushell to use for this module.
+   * This will override the version specified in the module's
+   * label `org.blue-build.nushell-version`.
+   */
+  `nushell-version`?: string;
+
   /**
    * A list of [stages](https://blue-build.org/reference/stages/) that are executed before the build of the final image.
    * This is useful for compiling programs from source without polluting the final bootable image.
