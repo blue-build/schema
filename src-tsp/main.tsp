@@ -43,9 +43,10 @@ model Recipe {
    **/
   `blue-build-tag`?: string;
 
-  /** The version of nushell to use for this module.
-   * This will override the version specified in the module's
-   * label `org.blue-build.nushell-version`.
+  /**
+   * The version of nushell to include in this image.
+   * This will override the default BlueBuild Nushell version.
+   * Change only if you need a specific version of Nushell, changing this might break some BlueBuild modules.
    */
   `nushell-version`?: string;
 
