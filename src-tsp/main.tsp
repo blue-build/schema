@@ -44,6 +44,13 @@ model Recipe {
   `blue-build-tag`?: string;
 
   /**
+   * The version of nushell to include in this image.
+   * This will override the default BlueBuild Nushell version.
+   * Change only if you need a specific version of Nushell, changing this might break some BlueBuild modules.
+   */
+  `nushell-version`?: string;
+
+  /**
    * A list of [stages](https://blue-build.org/reference/stages/) that are executed before the build of the final image.
    * This is useful for compiling programs from source without polluting the final bootable image.
    */
