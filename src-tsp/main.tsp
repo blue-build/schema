@@ -127,6 +127,7 @@ model ModuleDefaults {
   `no-cache`?: boolean = false;
 }
 
+@jsonSchema("module-custom-v1.json")
 model CustomModule {
   /** This is not a built-in module. */
   type: string;
@@ -142,6 +143,7 @@ model CustomModule {
 }
 
 @extension("additionalProperties", false)
+@jsonSchema("import-v1.json")
 model ImportedModule {
   /** The path to another file containing module configuration to import here.
    * https://blue-build.org/how-to/multiple-files/
