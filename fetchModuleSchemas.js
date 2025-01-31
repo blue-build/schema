@@ -1,4 +1,3 @@
-import { parse } from 'yaml'
 import { pascalCase } from "change-case";
 import fs from "node:fs"
 
@@ -22,12 +21,13 @@ for (const module of modules) {
         .split("\n")
         .flatMap(line => {
             if (line.trimStart().startsWith("model")) {
+                moduleModels.push(line.split(' ')[1]);
                 return [
                     `@extension("additionalProperties", false)`,
                     line
                 ];
             }
-            if (line.trimStart().startsWith(`type: "${module.name}"`)) {
+            if (line.trimStart().startsWith(`type: "${module.name}`)) {
                 return [
                     line,
                     '',
@@ -42,13 +42,12 @@ for (const module of modules) {
     fs.writeFileSync(`${modulesDir}/${module.name}.tsp`, text)
 
     moduleImports.push(`${module.name}.tsp`)
-    moduleModels.push(`${pascalCase(module.name)}`)
 }
 
 fs.writeFileSync(`${modulesDir}/index.tsp`, 
 moduleImports.map(m => `import "./${m}";`).join("\n") + `
 
 union RepoModule {
-${moduleModels.map(m => `  ${m}Module`).join(",\n")}
+${moduleModels.map(m => `  ${m}`).join(",\n")}
 }`
 )
