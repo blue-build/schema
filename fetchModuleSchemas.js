@@ -16,24 +16,30 @@ for (const module of modules) {
     if (module.tsp === "") continue
     const res = await fetch(module.tsp)
     let text = await res.text()
+    let last_line = ''
 
     text = text // add `...ModuleDefaults;` after the model type
         .split("\n")
         .flatMap(line => {
             if (line.trimStart().startsWith("model")) {
-                moduleModels.push(line.split(' ')[1]);
+                if (last_line.includes("@jsonSchema")) {
+                    moduleModels.push(line.split(' ')[1]);
+                }
+                last_line = line
                 return [
                     `@extension("additionalProperties", false)`,
                     line
                 ];
             }
             if (line.trimStart().startsWith(`type: "${module.name}`)) {
+                last_line = line
                 return [
                     line,
                     '',
                     '    ...ModuleDefaults; // added by fetchModuleSchemas.js',
                 ];
             } else {
+                last_line = line
                 return line;
             }
         })
