@@ -125,6 +125,10 @@ model ModuleDefaults {
    * https://blue-build.org/reference/module/#no-cache-optional
    */
   `no-cache`?: boolean = false;
+
+  /** Args to add for the module call.
+   */
+  args?: Record<string>;
 }
 
 @jsonSchema("module-custom-v1.json")
