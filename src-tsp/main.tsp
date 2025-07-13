@@ -129,6 +129,67 @@ model ModuleDefaults {
   /** Environment variables to add for the module call.
    */
   env?: Record<string>;
+
+  /** Secrets to mount for this module call. */
+  secrets?: Array<Secret>;
+}
+
+@oneOf
+union Secret {
+  SecretEnv,
+  SecretFile,
+  SecretExec,
+  SecretSsh,
+}
+
+model SecretEnv {
+  /** A secret pulled from an environment variable. */
+  type: "env";
+
+  /** The name of the environment variable */
+  name: string;
+}
+
+model SecretFile {
+  /** The source file containing the secret.
+   *
+   * NOTE: Relative paths are relative to the root of the repository.
+   */
+  source: string;
+
+  ...SecretExecOutputFile;
+}
+
+model SecretExec {
+  /** A secret pulled from the stdout of a command. */
+  type: "exec";
+
+  /** The command that will be executed. */
+  command: string;
+
+  /** Arguments for the command being executed. */
+  args?: Array<string>;
+
+  /** Defines the output method for the result of the command into the build. */
+  output: SecretExecOutput;
+}
+
+model SecretSsh {
+  /** Mount the SSH socket to use the hosts SSH socket. */
+  type: "ssh";
+}
+
+union SecretExecOutput {
+  SecretEnv,
+  SecretExecOutputFile,
+}
+
+model SecretExecOutputFile {
+  /** A secret pulled from a file on the host system. */
+  type: "file";
+
+  /** The destination path in the build to mount the secret. */
+  destination: string;
 }
 
 @jsonSchema("module-custom-v1.json")
