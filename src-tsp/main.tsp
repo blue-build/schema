@@ -148,6 +148,9 @@ model SecretEnv {
 
   /** The name of the environment variable */
   name: string;
+
+  /** Defines the mount type for the result of the command into the build. */
+  mount: SecretMount;
 }
 
 model SecretFile {
@@ -157,7 +160,8 @@ model SecretFile {
    */
   source: string;
 
-  ...SecretExecOutputFile;
+  /** Defines the mount type for the result of the command into the build. */
+  mount: SecretMount;
 }
 
 model SecretExec {
@@ -170,8 +174,8 @@ model SecretExec {
   /** Arguments for the command being executed. */
   args?: Array<string>;
 
-  /** Defines the output method for the result of the command into the build. */
-  output: SecretExecOutput;
+  /** Defines the mount type for the result of the command into the build. */
+  mount: SecretMount;
 }
 
 model SecretSsh {
@@ -179,12 +183,20 @@ model SecretSsh {
   type: "ssh";
 }
 
-union SecretExecOutput {
-  SecretEnv,
-  SecretExecOutputFile,
+union SecretMount {
+  SecretMountEnv,
+  SecretMountFile,
 }
 
-model SecretExecOutputFile {
+model SecretMountEnv {
+  /** A secret pulled from a file on the host system. */
+  type: "env";
+
+  /** The environment variable where the secret will be set. */
+  name: string;
+}
+
+model SecretMountFile {
   /** A secret pulled from a file on the host system. */
   type: "file";
 
