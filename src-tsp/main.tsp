@@ -51,6 +51,11 @@ model Recipe {
   `nushell-version`?: string;
 
   /**
+   * A list of platforms that will be built for the image.
+   */
+  platforms?: Array<Platform>;
+
+  /**
    * A list of [stages](https://blue-build.org/reference/stages/) that are executed before the build of the final image.
    * This is useful for compiling programs from source without polluting the final bootable image.
    */
@@ -62,6 +67,25 @@ model Recipe {
    * Each item in this list should have at least a `type:` or be specified to be included from an external file in the `recipes/` directory with `from-file:`.
    */
   modules: Array<ModuleEntry>;
+}
+
+enum Platform {
+  LinuxAmd64: "linux/amd64",
+  LinuxAmd64V2: "linux/amd64/v2",
+  LinuxArm64: "linux/arm64",
+  LinuxArm: "linux/arm",
+  LinuxArmV6: "linux/arm/v6",
+  LinuxArmV7: "linux/arm/v7",
+  Linux386: "linux/386",
+  LinuxLoong64: "linux/loong64",
+  LinuxMips: "linux/mips",
+  LinuxMipsle: "linux/mipsle",
+  LinuxMips64: "linux/mips64",
+  LinuxMips64le: "linux/mips64le",
+  LinuxPpc64: "linux/ppc64",
+  LinuxPpc64le: "linux/ppc64le",
+  LinuxRiscv64: "linux/riscv64",
+  LinuxS390x: "linux/s390x",
 }
 
 @jsonSchema("stage-list-v1.json")
