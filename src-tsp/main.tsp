@@ -178,6 +178,9 @@ model SecretEnv {
 }
 
 model SecretFile {
+  /** A secret pulled from a file. */
+  type: "file";
+
   /** The source file containing the secret.
    *
    * NOTE: Relative paths are relative to the root of the repository.
