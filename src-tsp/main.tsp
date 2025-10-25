@@ -67,6 +67,13 @@ model Recipe {
    * Each item in this list should have at least a `type:` or be specified to be included from an external file in the `recipes/` directory with `from-file:`.
    */
   modules: Array<ModuleEntry>;
+
+  /**
+   * A collection of custom labels that will be applied to the image.
+   *
+   * Each item should be a `key: value` pair representing a label name mapping to label value.
+   */
+  labels?: Record<string>;
 }
 
 enum Platform {
