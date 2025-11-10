@@ -44,6 +44,13 @@ model Recipe {
   `blue-build-tag`?: string;
 
   /**
+   * The version of cosign that will be included in the image.
+   * This will override the default version set by the CLI.
+   * Setting to `none` will prevent installing cosign altogether.
+   **/
+  `cosign-version`?: string;
+
+  /**
    * The version of nushell to include in this image.
    * This will override the default BlueBuild Nushell version.
    * Change only if you need a specific version of Nushell, changing this might break some BlueBuild modules.
