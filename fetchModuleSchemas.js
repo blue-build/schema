@@ -52,7 +52,9 @@ for (const module of modules) {
 
 fs.writeFileSync(`${modulesDir}/index.tsp`, 
 moduleImports.map(m => `import "./${m}";`).join("\n") + `
+using TypeSpec.JsonSchema;
 
+@oneOf
 union RepoModule {
 ${moduleModels.map(m => `  ${m}`).join(",\n")}
 }`

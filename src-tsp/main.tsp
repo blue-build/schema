@@ -111,6 +111,7 @@ model StageList {
   stages: Array<StageEntry>;
 }
 
+@oneOf
 union StageEntry {
   Stage,
   ImportedModule,
@@ -147,6 +148,7 @@ model ModuleList {
   modules: Array<ModuleEntry>;
 }
 
+@oneOf
 union ModuleEntry {
   Module,
   ImportedModule,
