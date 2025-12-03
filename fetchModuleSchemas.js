@@ -14,13 +14,8 @@ fs.mkdirSync(modulesDir)
 
 for (const module of modules) {
     if (module.tsp === "") continue
-    let url = undefined
-    if (module.tsp.includes("blue-build/modules")) {
-        url = module.tsp.replace("/main/", "/refs/heads/oneof-fix/")
-    } else {
-        url = module.tsp
-    }
 
+    const url = module.tsp.replace("/main/", "/refs/heads/oneof-fix/")
     console.log(url)
     const res = await fetch(url)
     let text = await res.text()

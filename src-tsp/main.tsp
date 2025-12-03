@@ -103,6 +103,7 @@ enum Platform {
 }
 
 @jsonSchema("stage-list-v1.json")
+@extension("additionalProperties", false)
 model StageList {
   /**
    * A list of [stages](https://blue-build.org/reference/stages/) that are executed before the build of the final image.
@@ -139,6 +140,7 @@ model Stage {
 }
 
 @jsonSchema("module-list-v1.json")
+@extension("additionalProperties", false)
 model ModuleList {
   /**
    * A list of [modules](https://blue-build.org/reference/module/) that is executed in order. Multiple of the same module can be included.
@@ -182,6 +184,7 @@ union Secret {
   SecretSsh,
 }
 
+@extension("additionalProperties", false)
 model SecretEnv {
   /** A secret pulled from an environment variable. */
   type: "env";
@@ -193,6 +196,7 @@ model SecretEnv {
   mount: SecretMount;
 }
 
+@extension("additionalProperties", false)
 model SecretFile {
   /** A secret pulled from a file. */
   type: "file";
@@ -207,6 +211,7 @@ model SecretFile {
   mount: SecretMount;
 }
 
+@extension("additionalProperties", false)
 model SecretExec {
   /** A secret pulled from the stdout of a command. */
   type: "exec";
@@ -221,6 +226,7 @@ model SecretExec {
   mount: SecretMount;
 }
 
+@extension("additionalProperties", false)
 model SecretSsh {
   /** Mount the SSH socket to use the hosts SSH socket. */
   type: "ssh";
@@ -231,6 +237,7 @@ union SecretMount {
   SecretMountFile,
 }
 
+@extension("additionalProperties", false)
 model SecretMountEnv {
   /** A secret pulled from a file on the host system. */
   type: "env";
@@ -239,6 +246,7 @@ model SecretMountEnv {
   name: string;
 }
 
+@extension("additionalProperties", false)
 model SecretMountFile {
   /** A secret pulled from a file on the host system. */
   type: "file";
