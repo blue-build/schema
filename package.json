@@ -1,16 +1,15 @@
 {
-    "name": "schema.blue-build.org",
-    "version": "0.1.0",
-    "type": "module",
-    "dependencies": {
-        "@typespec/compiler": "0.63.0",
-        "@typespec/json-schema": "0.63.0",
-        "change-case": "^5.4.4",
-        "yaml": "^2.4.2"
-    },
-    "private": true,
-    "scripts": {
-        "build": "node ./fetchModuleSchemas.js && rm -rf ./tsp-output && npx tsp compile ./src-tsp",
-        "build-web": "npm run build && node ./buildWeb.js"
-    }
+  "name": "schema.blue-build.org",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "@typespec/compiler": "0.63.0",
+    "@typespec/json-schema": "0.63.0",
+    "yaml": "^2.4.2"
+  },
+  "private": true,
+  "scripts": {
+    "build": "node ./fetchModuleSchemas.js && rm -rf ./tsp-output && npx tsp compile ./src-tsp",
+    "build-web": "npm run build && node ./buildWeb.js"
+  }
 }
