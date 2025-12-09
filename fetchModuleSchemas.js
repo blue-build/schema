@@ -31,21 +31,21 @@ for (const module of modules) {
                 }
                 last_line = line
                 return [
-                    `@extension("additionalProperties", false)`,
                     line
                 ];
             }
+            last_line = line
+
             if (line.trimStart().startsWith(`type: "${module.name}`)) {
-                last_line = line
                 return [
                     line,
                     '',
                     '    ...ModuleDefaults; // added by fetchModuleSchemas.js',
                 ];
-            } else {
-                last_line = line
-                return line;
-            }
+            } 
+            return [
+                line
+            ];
         })
         .join('\n')
 
