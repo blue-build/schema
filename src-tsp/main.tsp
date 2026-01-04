@@ -206,6 +206,17 @@ model ModuleIf {
   `os-release`?: Record<FlexVal | Array<FlexVal>>;
 
   /**
+   * Check if the values in the `/etc/os-release` file
+   * don't match. This is useful for checking the type/version
+   * of the OS before executing the module.
+   *
+   * A single value or an array of values can be passed in.
+   * If an array is passed in, a successful check means all
+   * values don't match.
+   */
+  `not-os-release`?: Record<FlexVal | Array<FlexVal>>;
+
+  /**
    * Checks for the existance or non-existance of
    * environment variables at build-time before
    * continuing with the module.
@@ -255,6 +266,19 @@ model ModuleIf {
    * prevent scripts from operating outside of the repo directory.
    */
   `host-exec`?: ModuleIfHostExec;
+
+  /**
+   * Executes a command on the host machine to determine
+   * if the module should be templated. If the command fails,
+   * then the module is templated.
+   *
+   * Execution will be performed in the repo directory.
+   *
+   * CAUTION: This allows arbitrary code execution on the host machine.
+   * Be sure to trust the code you are executing by this function. We cannot
+   * prevent scripts from operating outside of the repo directory.
+   */
+  `not-host-exec`?: ModuleIfHostExec;
 }
 
 model ModuleIfHostFile {
@@ -295,6 +319,12 @@ model ModuleIfEnv {
    * one or any listed string.
    */
   equals: Record<string | Array<string>>;
+
+  /**
+   * Checks if an environment variable doesn't equal
+   * any listed string.
+   */
+  `not-equals`: Record<string | Array<string>>;
 }
 
 model ModuleIfHostExec {
