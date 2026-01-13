@@ -171,8 +171,177 @@ model ModuleDefaults {
    */
   env?: Record<string>;
 
+  /**
+   * Determines if a module should execute.
+   *
+   * There are various methods that a module can be
+   * conditionally run. If a string is passed to it,
+   * it will be executed by `/bin/sh` at build-time
+   * and the exit code will determine if the module executes.
+   * A check failing doesn't fail the build, it will just skip the module.
+   *
+   * The other methods are checking `os-release` at build-time, checking for
+   * a host file before build-time, or running a command on the host before build-time.
+   *
+   * All checks must pass for the module to be executed.
+   */
+  `if`?: string | ModuleIf;
+
   /** Secrets to mount for this module call. */
   secrets?: Array<Secret>;
+}
+
+alias FlexVal = string | integer | float;
+
+model ModuleIf {
+  /**
+   * Check if the value in the `/etc/os-release` file
+   * matches. This is useful for checking the type/version
+   * of the OS before executing the module.
+   *
+   * A single value or an array of values can be passed in.
+   * If an array is passed in, a successful check means at least
+   * one value matched.
+   */
+  `os-release`?: Record<FlexVal | Array<FlexVal>>;
+
+  /**
+   * Check if the values in the `/etc/os-release` file
+   * don't match. This is useful for checking the type/version
+   * of the OS before executing the module.
+   *
+   * A single value or an array of values can be passed in.
+   * If an array is passed in, a successful check means all
+   * values don't match.
+   */
+  `not-os-release`?: Record<FlexVal | Array<FlexVal>>;
+
+  /**
+   * Checks for the existance or non-existance of
+   * environment variables at build-time before
+   * continuing with the module.
+   *
+   * You can also check if an environment variable
+   * is equal to a value.
+   */
+  env?: ModuleIfEnv;
+
+  /**
+   * Evaluate the string in a shell at build-time,
+   * and use the exit-code to determine if the module
+   * should run.
+   *
+   * Equivalent to passing a string to `if:` directly.
+   */
+  eval?: string;
+
+  /**
+   * Checks for the existance or non-existance of a file
+   * on the host machine before deciding to template the
+   * module call.
+   *
+   * This can be useful for module calls that use secret files
+   * that not every user that clones the repo will have access to.
+   */
+  `host-file`?: ModuleIfHostFile;
+
+  /**
+   * Checks for the existance or non-existance of
+   * environment variables on the host machine before
+   * deciding to template a module call.
+   *
+   * You can also check if an environment variable
+   * is equal to a value.
+   */
+  `host-env`?: ModuleIfEnv;
+
+  /**
+   * Executes a command on the host machine to determine
+   * if the module should be templated.
+   *
+   * Execution will be performed in the repo directory.
+   *
+   * CAUTION: This allows arbitrary code execution on the host machine.
+   * Be sure to trust the code you are executing by this function. We cannot
+   * prevent scripts from operating outside of the repo directory.
+   */
+  `host-exec`?: ModuleIfHostExec;
+
+  /**
+   * Executes a command on the host machine to determine
+   * if the module should be templated. If the command fails,
+   * then the module is templated.
+   *
+   * Execution will be performed in the repo directory.
+   *
+   * CAUTION: This allows arbitrary code execution on the host machine.
+   * Be sure to trust the code you are executing by this function. We cannot
+   * prevent scripts from operating outside of the repo directory.
+   */
+  `not-host-exec`?: ModuleIfHostExec;
+}
+
+model ModuleIfHostFile {
+  /**
+   * A file or list of files that should exist
+   * to allow a module to be templated.
+   *
+   * All paths will be normalized to the root of the
+   * the project.
+   */
+  exists?: string | Array<string>;
+
+  /**
+   * A file or list of files that should not exist
+   * to allow a module to be templated.
+   *
+   * All paths will be normalized to the root of the
+   * the project.
+   */
+  `not-exists`?: string | Array<string>;
+}
+
+model ModuleIfEnv {
+  /**
+   * Check if a or all listed environment variables
+   * exist and are not empty strings.
+   */
+  exists?: string | Array<string>;
+
+  /**
+   * Check if a or all listed environment variables
+   * do not exist, and if they do, that they are empty strings.
+   */
+  `not-exists`?: string | Array<string>;
+
+  /**
+   * Checks if an environment variable equals to
+   * one or any listed string.
+   */
+  equals: Record<string | Array<string>>;
+
+  /**
+   * Checks if an environment variable doesn't equal
+   * any listed string.
+   */
+  `not-equals`: Record<string | Array<string>>;
+}
+
+model ModuleIfHostExec {
+  /**
+   * The command to run.
+   *
+   * It must be a path to an executable file.
+   *
+   * CAUTION: For safety purposes, setting `sudo`, `run0`, or `pkexec`
+   * will error out the program.
+   */
+  cmd: string;
+
+  /**
+   * The arguments to pass into the command.
+   */
+  args?: Array<string>;
 }
 
 @oneOf
