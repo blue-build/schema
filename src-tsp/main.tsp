@@ -128,6 +128,9 @@ model Stage {
   /** The full image ref (image name + tag). This will be set in the FROM statement of the stage. */
   from: string;
 
+  /** Defines the platform to run this stage on */
+  platform?: Platform;
+
   /** Allows a user to pass in an array of strings that are passed directly into the [`SHELL` instruction](https://docs.docker.com/reference/dockerfile/#shell). */
   shell?: string;
 
