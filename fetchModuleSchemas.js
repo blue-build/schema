@@ -1,4 +1,3 @@
-import { pascalCase } from "change-case";
 import fs from "node:fs"
 
 const modulesDir = "./src-tsp/modules"
@@ -14,7 +13,12 @@ fs.mkdirSync(modulesDir)
 
 for (const module of modules) {
     if (module.tsp === "") continue
-    const res = await fetch(module.tsp)
+
+    // Useful for testing modules on other branches
+    const url = module.tsp.replace("/main/", "/refs/heads/oneof-fix/")
+    // const url = module.tsp
+    console.log(url)
+    const res = await fetch(url)
     let text = await res.text()
     let last_line = ''
 
@@ -22,26 +26,26 @@ for (const module of modules) {
         .split("\n")
         .flatMap(line => {
             if (line.trimStart().startsWith("model")) {
-                if (last_line.includes("@jsonSchema")) {
+                if (last_line.includes("@jsonSchema") && !last_line.includes("latest.json")) {
                     moduleModels.push(line.split(' ')[1]);
                 }
                 last_line = line
                 return [
-                    `@extension("additionalProperties", false)`,
                     line
                 ];
             }
+            last_line = line
+
             if (line.trimStart().startsWith(`type: "${module.name}`)) {
-                last_line = line
                 return [
                     line,
                     '',
                     '    ...ModuleDefaults; // added by fetchModuleSchemas.js',
                 ];
-            } else {
-                last_line = line
-                return line;
-            }
+            } 
+            return [
+                line
+            ];
         })
         .join('\n')
 
@@ -52,7 +56,9 @@ for (const module of modules) {
 
 fs.writeFileSync(`${modulesDir}/index.tsp`, 
 moduleImports.map(m => `import "./${m}";`).join("\n") + `
+using TypeSpec.JsonSchema;
 
+@oneOf
 union RepoModule {
 ${moduleModels.map(m => `  ${m}`).join(",\n")}
 }`
