@@ -61,7 +61,7 @@ model Recipe {
    * The version of nushell to include at `/usr/libexec/bluebuild/nu/nu` for use by modules in the image.
    * This will override the default BlueBuild Nushell version.
    * Change only if you need a specific version of Nushell, changing this might break some BlueBuild modules.
-   * Set to to `none` to opt out of installing Nushell into your image (this will break modules that depend on it).
+   * Set to to `none` to opt out of installing Nushell into your image (this will break modules that use Nushell at run time in the final image, like `default-flatpaks`).
    */
   `nushell-version`?: string;
 
