@@ -24,9 +24,14 @@ model Recipe {
 
   /**
    * The [OCI](https://opencontainers.org/) image to base your custom image on.
-   * Only atomic Fedora images and those based on them are officially supported.
-   * Universal Blue is recommended. [A list of Universal Blue's images](https://universal-blue.org/images/) can be found on their website
-   * BlueBuild-built images can be used as well.
+   * Only atomic Fedora images and those based on them are officially supported as of now.
+   * [BlueBuild base images](github.com/blue-build/base-images) or [Universal Blue images](https://universal-blue.org/images/) are recommended.
+   * Other custom bootc images can be used as well.
+   *
+   * Example:
+   * ```yaml
+   * base-image: ghcr.io/blue-build/base-images/fedora-silverblue
+   * ```
    */
   `base-image`: string;
 
@@ -38,8 +43,10 @@ model Recipe {
   `image-version`: string | integer;
 
   /**
-   * The tag to pull for the bluebuild cli. This is mostly used for
+   * The tag to pull for the BlueBuild cli. This is mostly used for
    * trying out specific versions of the cli without compiling it locally.
+   * Supply the tag of the cli release container to pull, see [the list of available tags](https://github.com/blue-build/cli/pkgs/container/cli) for reference.
+   * Default: `latest-installer`. Set to to `none` to opt out of installing the CLI into your image.
    **/
   `blue-build-tag`?: string;
 
@@ -51,16 +58,25 @@ model Recipe {
   `cosign-version`?: string;
 
   /**
-   * The version of nushell to include in this image.
+   * The version of nushell to include at `/usr/libexec/bluebuild/nu/nu` for use by modules in the image.
    * This will override the default BlueBuild Nushell version.
    * Change only if you need a specific version of Nushell, changing this might break some BlueBuild modules.
+   * Set to to `none` to opt out of installing Nushell into your image (this will break modules that use Nushell at run time in the final image, like `default-flatpaks`).
    */
   `nushell-version`?: string;
 
   /**
-   * A list of platforms that will be built for the image.
+   * Specify a list of the platforms to build for your image.
+   * The resulting images will be added to a manifest list that allows your host’s container runtime to pull the correct image architecture for your hardware. The process of building a multi-architecture image will end up using emulation. Consequently, image builds will take significantly longer and more space will be required on the build host since each platform that is being built is its own image. If `platforms:` is not specified, the build host’s architecture will be used.
    */
   platforms?: Array<Platform>;
+
+  /**
+   * A collection of custom labels that will be applied to the image.
+   *
+   * Each item should be a `key: value` pair representing a label name mapping to label value.
+   */
+  labels?: Record<string>;
 
   /**
    * A list of [stages](https://blue-build.org/reference/stages/) that are executed before the build of the final image.
@@ -71,16 +87,17 @@ model Recipe {
   /**
    * A list of [modules](https://blue-build.org/reference/module/) that is executed in order. Multiple of the same module can be included.
    *
-   * Each item in this list should have at least a `type:` or be specified to be included from an external file in the `recipes/` directory with `from-file:`.
+   * Each item in this list needs have at least a `type:` except if the configuration is included from an external file in the `recipes/` directory with [`from-file:`](https://blue-build.org/how-to/multiple-files/).
+   *
+   * Example:
+   *
+   * ```yaml
+   * modules:
+   *  - from-file: common-packages.yml # an external module configuration file for installing commong packages
+   *  - type: signing # a module that doesn't require any configuration
+   * ```
    */
   modules: Array<ModuleEntry>;
-
-  /**
-   * A collection of custom labels that will be applied to the image.
-   *
-   * Each item should be a `key: value` pair representing a label name mapping to label value.
-   */
-  labels?: Record<string>;
 }
 
 enum Platform {
