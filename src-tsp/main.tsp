@@ -335,13 +335,13 @@ model ModuleIfEnv {
    * Checks if an environment variable equals to
    * one or any listed string.
    */
-  equals: Record<string | Array<string>>;
+  equals?: Record<string | Array<string>>;
 
   /**
    * Checks if an environment variable doesn't equal
    * any listed string.
    */
-  `not-equals`: Record<string | Array<string>>;
+  `not-equals`?: Record<string | Array<string>>;
 }
 
 model ModuleIfHostExec {
