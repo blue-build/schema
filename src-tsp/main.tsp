@@ -338,7 +338,7 @@ model MountBind {
   destination: string;
 
   /** Whether the mount should be read-only. */
-  readOnly?: boolean;
+  readonly?: boolean;
 }
 
 model MountTmpFs {
