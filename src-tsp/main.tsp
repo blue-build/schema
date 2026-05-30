@@ -3,9 +3,21 @@ import "./modules/index.tsp";
 
 using TypeSpec.JsonSchema;
 
+@jsonSchema("recipe.json")
+@oneOf
+union Recipe {
+  RecipeV1,
+  RecipeV2,
+}
+
 @jsonSchema("recipe-v1.json")
 @extension("additionalProperties", false)
-model Recipe {
+model RecipeV1 {
+  /**
+   * The version of the recipe file schema.
+   */
+  version?: 1;
+
   /**
    * The image name. Used when publishing to GHCR as `ghcr.io/user/name`.
    */
@@ -98,6 +110,166 @@ model Recipe {
    * ```
    */
   modules: Array<ModuleEntry>;
+}
+
+@jsonSchema("recipe-v2.json")
+@extension("additionalProperties", false)
+model RecipeV2 {
+  /**
+   * The version of the recipe file schema.
+   */
+  version: 2;
+
+  /**
+   * Options for the base image like the image and public key.
+   */
+  base: RecipeV2BaseImage;
+
+  /**
+   * Metadata for the image like the name, description, and labels.
+   */
+  metadata: RecipeV2Metadata;
+
+  /**
+   * Specifications for the image that modifies how it is built and published.
+   */
+  spec?: RecipeV2Spec;
+
+  /**
+   * A list of [stages](https://blue-build.org/reference/stages/) that are executed before the build of the final image.
+   * This is useful for compiling programs from source without polluting the final bootable image.
+   */
+  stages?: Array<StageEntry>;
+
+  /**
+   * A list of [modules](https://blue-build.org/reference/module/) that is executed in order. Multiple of the same module can be included.
+   *
+   * Each item in this list needs have at least a `type:` except if the configuration is included from an external file in the `recipes/` directory with [`from-file:`](https://blue-build.org/how-to/multiple-files/).
+   *
+   * Example:
+   *
+   * ```yaml
+   * modules:
+   *  - from-file: common-packages.yml # an external module configuration file for installing commong packages
+   *  - type: signing # a module that doesn't require any configuration
+   * ```
+   */
+  modules: Array<ModuleEntry>;
+}
+
+model RecipeV2BaseImage {
+  /**
+   * The base image ref.
+   */
+  image: RecipeV2BaseImageRef;
+
+  /**
+   * The public key used to verify the base image signature.
+   * This will validate the image before building with it.
+   *
+   * URLs are supported. Paths are relative to the root of the project.
+   */
+  `public-key`?: string;
+}
+
+@oneOf
+union RecipeV2BaseImageRef {
+  string,
+  ImageRef,
+}
+
+model ImageRef {
+  /**
+   * The registry hostname.
+   *
+   * i.e. `registry.example.com`
+   */
+  registry: string;
+
+  /**
+   * The image repository path in the registry.
+   *
+   * i.e. `path/to/image`
+   */
+  repository: string;
+
+  /**
+   * The tag of the image. This is overriden by `digest`.
+   * Defaults to `latest` if left blank.
+   *
+   * i.e. `gts`
+   */
+  tag?: string | integer;
+
+  /**
+   * The specific digest of the image to pull.
+   * Overrides the `tag`.
+   *
+   * i.e. `sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff`
+   */
+  digest?: string;
+}
+
+model RecipeV2Metadata {
+  /**
+   * The image name. Used when publishing to GHCR as `ghcr.io/user/name`.
+   */
+  name: string;
+
+  /**
+   * The image description. Published to GHCR in the image metadata.
+   */
+  description: string;
+
+  /**
+   * A collection of custom labels that will be applied to the image.
+   *
+   * Each item should be a `key: value` pair representing a label name mapping to label value.
+   */
+  labels?: Record<string>;
+}
+
+model RecipeV2Spec {
+  /**
+   * Allows setting custom tags on the recipe’s final image.
+   * Adding tags to this property will override the `latest` and timestamp tags.
+   */
+  tags?: Array<string>;
+
+  /**
+   * Specify a list of the platforms to build for your image.
+   * The resulting images will be added to a manifest list that allows your host’s container runtime to pull the correct image architecture for your hardware. The process of building a multi-architecture image will end up using emulation. Consequently, image builds will take significantly longer and more space will be required on the build host since each platform that is being built is its own image. If `platforms:` is not specified, the build host’s architecture will be used.
+   */
+  platforms?: Array<Platform>;
+
+  /**
+   * Extra tooling version overrides.
+   */
+  `tool-versions`?: RecipeV2SpecToolVersions;
+}
+
+model RecipeV2SpecToolVersions {
+  /**
+   * The tag to pull for the BlueBuild cli. This is mostly used for
+   * trying out specific versions of the cli without compiling it locally.
+   * Supply the tag of the cli release container to pull, see [the list of available tags](https://github.com/blue-build/cli/pkgs/container/cli) for reference.
+   * Default: `latest-installer`. Set to to `none` to opt out of installing the CLI into your image.
+   **/
+  bluebuild?: string;
+
+  /**
+   * The version of cosign that will be included in the image.
+   * This will override the default version set by the CLI.
+   * Setting to `none` will prevent installing cosign altogether.
+   **/
+  cosign?: string;
+
+  /**
+   * The version of nushell to include at `/usr/libexec/bluebuild/nu/nu` for use by modules in the image.
+   * This will override the default BlueBuild Nushell version.
+   * Change only if you need a specific version of Nushell, changing this might break some BlueBuild modules.
+   */
+  nushell?: string;
 }
 
 enum Platform {
