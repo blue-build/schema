@@ -219,7 +219,13 @@ model RecipeV2Metadata {
   /**
    * The image description. Published to GHCR in the image metadata.
    */
-  description: string;
+  description?: string;
+
+  /**
+   * Allows setting custom tags on the recipe’s final image.
+   * Adding tags to this property will override the `latest` and timestamp tags.
+   */
+  tags?: Array<string>;
 
   /**
    * A collection of custom labels that will be applied to the image.
@@ -230,12 +236,6 @@ model RecipeV2Metadata {
 }
 
 model RecipeV2Spec {
-  /**
-   * Allows setting custom tags on the recipe’s final image.
-   * Adding tags to this property will override the `latest` and timestamp tags.
-   */
-  tags?: Array<string>;
-
   /**
    * Specify a list of the platforms to build for your image.
    * The resulting images will be added to a manifest list that allows your host’s container runtime to pull the correct image architecture for your hardware. The process of building a multi-architecture image will end up using emulation. Consequently, image builds will take significantly longer and more space will be required on the build host since each platform that is being built is its own image. If `platforms:` is not specified, the build host’s architecture will be used.
