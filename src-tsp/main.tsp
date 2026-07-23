@@ -212,14 +212,31 @@ model ImageRef {
 
 model RecipeV2Metadata {
   /**
-   * The image name. Used when publishing to GHCR as `ghcr.io/user/name`.
+   * The image name.
+   * Used when publishing images. (e.g. `name` in `registry.example.com/namespace/name`)
    */
   name: string;
 
   /**
-   * The image description. Published to GHCR in the image metadata.
+   * The image description. Published in the image metadata.
    */
   description?: string;
+
+  /**
+   * The container registry. Overrides the default registry detected from CI.
+   * Used when publishing images.  (e.g. `namespace` in `registry.example.com/namespace/name`)
+   *
+   * Can be overriden from the CLI by the `--registry` arg.
+   */
+  registry?: string;
+
+  /**
+   * The container registry namespace. Overrides the default registry namespace detected from CI.
+   * Used when publishing images. (e.g. `registry.example.com` in `registry.example.com/namespace/name`)
+   *
+   * Can be overriden from the CLI by the `--registry-namespace` arg.
+   */
+  `registry-namespace`?: string;
 
   /**
    * Allows setting custom tags on the recipe’s final image.
@@ -246,6 +263,11 @@ model RecipeV2Spec {
    * Extra tooling version overrides.
    */
   `tool-versions`?: RecipeV2SpecToolVersions;
+
+  /**
+   * ISO configuration.
+   */
+  iso?: RecipeV2SpecIso;
 }
 
 model RecipeV2SpecToolVersions {
@@ -270,6 +292,107 @@ model RecipeV2SpecToolVersions {
    * Change only if you need a specific version of Nushell, changing this might break some BlueBuild modules.
    */
   nushell?: string;
+}
+
+model RecipeV2SpecIso {
+  /**
+   * The label to give the ISO.
+   */
+  label: string;
+
+  /**
+   * The session type for the Live ISO.
+   */
+  `session-type`: LivesysType;
+
+  /**
+   * The Grub2 config for the ISO.
+   */
+  grub2?: RecipeV2SpecIsoGrub2;
+
+  /**
+   * ISO build hooks used when preparing an image for ISO creation.
+   */
+  hooks?: RecipeV2SpecIsoHooks;
+}
+
+model RecipeV2SpecIsoGrub2 {
+  /**
+   * The timeout in seconds for grub before selecting the default boot entry.
+   *
+   * Defaults to 10 seconds.
+   */
+  timeout?: integer = 10;
+
+  /**
+   * List of Grub2 entries for the ISO.
+   *
+   * Will default to a single entry with name "BlueBuild Live ISO".
+   */
+  entries?: Array<RecipeV2SpecIsoGrub2Entry>;
+}
+
+model RecipeV2SpecIsoGrub2Entry {
+  /**
+   * The name of the entry in the Grub2 bootloader.
+   */
+  name: string;
+
+  /**
+   * The path to the ISO's kernel.
+   *
+   * Defaults to `/images/pxeboot/vmlinuz`
+   */
+  `kernel-path`?: string = "/images/pxeboot/vmlinuz";
+
+  /**
+   * Arguments to add to the default kernel arguments.
+   * If `no-default-kernel-args` is `true`, then the args
+   * specified here will be the only args used.
+   */
+  `kernel-args`?: Array<string>;
+
+  /**
+   * Disable supplying default kernel arguments in favor of
+   * using only what is supplied in `kernel-args`.
+   *
+   * Default args consist of:
+   * - quiet
+   * - rhgb
+   * - root=live:CDLABEL=${label}
+   * - enforcing=0
+   * - rd.live.image
+   */
+  `no-default-kernel-args`?: boolean = false;
+
+  /**
+   * The path to the ISO's initramfs image.
+   *
+   * Defaults to `/images/pxeboot/initrd.img`
+   */
+  `initrd-path`?: string = "/images/pxeboot/initrd.img";
+}
+
+model RecipeV2SpecIsoHooks {
+  `pre-initramfs`?: Array<ModuleEntry>;
+  `post-livesys`?: Array<ModuleEntry>;
+}
+
+// session types found from https://pagure.io/livesys-scripts/blob/main/f/libexec/livesys/sessions.d
+enum LivesysType {
+  Budgie: "budgie",
+  Cinnamon: "cinnamon",
+  Cosmic: "cosmic",
+  Gnome: "gnome",
+  I3: "i3",
+  Kde: "kde",
+  Lxde: "lxde",
+  Lxqt: "lxqt",
+  Mate: "mate",
+  Miraclewm: "miraclewm",
+  Soas: "soas",
+  Sway: "sway",
+  Xfce: "xfce",
 }
 
 enum Platform {
