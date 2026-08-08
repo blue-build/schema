@@ -37,7 +37,7 @@ model RecipeV1 {
   /**
    * The [OCI](https://opencontainers.org/) image to base your custom image on.
    * Only atomic Fedora images and those based on them are officially supported as of now.
-   * [BlueBuild base images](github.com/blue-build/base-images) or [Universal Blue images](https://universal-blue.org/images/) are recommended.
+   * [BlueBuild base images](https://github.com/blue-build/base-images) or [Universal Blue images](https://universal-blue.org/images/) are recommended.
    * Other custom bootc images can be used as well.
    *
    * Example:
