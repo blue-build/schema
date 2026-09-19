@@ -4,7 +4,7 @@
     "type": "module",
     "dependencies": {
         "@typespec/compiler": "0.63.0",
-        "@typespec/json-schema": "0.63.0",
+        "@typespec/json-schema": "0.67.1",
         "change-case": "^5.4.4",
         "yaml": "^2.4.2"
     },
