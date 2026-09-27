@@ -157,6 +157,7 @@ model RecipeV2 {
   modules: Array<ModuleEntry>;
 }
 
+@extension("additionalProperties", false)
 model RecipeV2BaseImage {
   /**
    * The base image ref.
@@ -178,6 +179,7 @@ union RecipeV2BaseImageRef {
   ImageRef,
 }
 
+@extension("additionalProperties", false)
 model ImageRef {
   /**
    * The registry hostname.
@@ -210,6 +212,7 @@ model ImageRef {
   digest?: string;
 }
 
+@extension("additionalProperties", false)
 model RecipeV2Metadata {
   /**
    * The image name. Used when publishing to GHCR as `ghcr.io/user/name`.
@@ -235,6 +238,7 @@ model RecipeV2Metadata {
   labels?: Record<string>;
 }
 
+@extension("additionalProperties", false)
 model RecipeV2Spec {
   /**
    * Specify a list of the platforms to build for your image.
@@ -248,6 +252,7 @@ model RecipeV2Spec {
   `tool-versions`?: RecipeV2SpecToolVersions;
 }
 
+@extension("additionalProperties", false)
 model RecipeV2SpecToolVersions {
   /**
    * The tag to pull for the BlueBuild cli. This is mostly used for
@@ -292,6 +297,7 @@ enum Platform {
 }
 
 @jsonSchema("stage-list-v1.json")
+@extension("additionalProperties", false)
 model StageList {
   /**
    * A list of [stages](https://blue-build.org/reference/stages/) that are executed before the build of the final image.
@@ -300,6 +306,7 @@ model StageList {
   stages: Array<StageEntry>;
 }
 
+@oneOf
 union StageEntry {
   Stage,
   ImportedModule,
@@ -330,6 +337,7 @@ model Stage {
 }
 
 @jsonSchema("module-list-v1.json")
+@extension("additionalProperties", false)
 model ModuleList {
   /**
    * A list of [modules](https://blue-build.org/reference/module/) that is executed in order. Multiple of the same module can be included.
@@ -339,12 +347,14 @@ model ModuleList {
   modules: Array<ModuleEntry>;
 }
 
+@oneOf
 union ModuleEntry {
   Module,
   ImportedModule,
 }
 
 @jsonSchema("module-v1.json")
+@oneOf
 union Module {
   RepoModule,
   CustomModule,
@@ -372,6 +382,7 @@ union Secret {
   SecretSsh,
 }
 
+@extension("additionalProperties", false)
 model SecretEnv {
   /** A secret pulled from an environment variable. */
   type: "env";
@@ -383,6 +394,7 @@ model SecretEnv {
   mount: SecretMount;
 }
 
+@extension("additionalProperties", false)
 model SecretFile {
   /** A secret pulled from a file. */
   type: "file";
@@ -397,6 +409,7 @@ model SecretFile {
   mount: SecretMount;
 }
 
+@extension("additionalProperties", false)
 model SecretExec {
   /** A secret pulled from the stdout of a command. */
   type: "exec";
@@ -411,16 +424,19 @@ model SecretExec {
   mount: SecretMount;
 }
 
+@extension("additionalProperties", false)
 model SecretSsh {
   /** Mount the SSH socket to use the hosts SSH socket. */
   type: "ssh";
 }
 
+@oneOf
 union SecretMount {
   SecretMountEnv,
   SecretMountFile,
 }
 
+@extension("additionalProperties", false)
 model SecretMountEnv {
   /** A secret pulled from a file on the host system. */
   type: "env";
@@ -429,6 +445,7 @@ model SecretMountEnv {
   name: string;
 }
 
+@extension("additionalProperties", false)
 model SecretMountFile {
   /** A secret pulled from a file on the host system. */
   type: "file";
