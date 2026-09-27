@@ -110,6 +110,11 @@ model RecipeV1 {
    * ```
    */
   modules: Array<ModuleEntry>;
+
+  /**
+   * A list of mounts that will be mounted in each RUN stage.
+   */
+  mounts?: Array<Mount>;
 }
 
 @jsonSchema("recipe-v2.json")
@@ -362,6 +367,15 @@ model ModuleDefaults {
 
   /** Secrets to mount for this module call. */
   secrets?: Array<Secret>;
+
+  /**
+   * A list of mounts that will be mounted for this module.
+   *
+   * Mounts with the same type and name defined for other modules will
+   * use the same mount. This is useful for sharing files between modules or stages
+   * without retaining the files in the final image.
+   */
+  mounts?: Array<Mount>;
 }
 
 @oneOf
@@ -476,4 +490,56 @@ model ModuleStageList {
    * This is useful for compiling programs from source without polluting the final bootable image.
    */
   stages?: Array<StageEntry>;
+}
+
+@oneOf
+union Mount {
+  MountBind,
+  MountTmpFs,
+  MountCache,
+}
+
+model MountBind {
+  /** A bind mount from the host system. */
+  type: "bind";
+
+  /** The source path on the host system to mount. */
+  source: string;
+
+  /** The destination path to mount to. */
+  destination: string;
+
+  /** Whether the mount should be read-only. */
+  readonly?: boolean;
+}
+
+model MountTmpFs {
+  /** A temporary file system mount. */
+  type: "tmpfs";
+
+  /** The destination path to mount to. */
+  destination: string;
+
+  /** The size of the tmpfs mount. */
+  size?: string;
+}
+
+enum MountCacheSharing {
+  Shared: "shared",
+  Private: "private",
+  Locked: "locked",
+}
+
+model MountCache {
+  /** A cache mount. */
+  type: "cache";
+
+  /** The destination path to mount to. */
+  destination: string;
+
+  /** An identifier for the cache. */
+  id?: string;
+
+  /** The sharing mode of the cache. */
+  sharing?: MountCacheSharing;
 }
